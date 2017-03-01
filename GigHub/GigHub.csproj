@@ -218,6 +218,10 @@
     <Compile Include="Migrations\201702281605405_PopulateGenresTable.Designer.cs">
       <DependentUpon>201702281605405_PopulateGenresTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703011507222_AddForeignKeyPropertiesTogig.cs" />
+    <Compile Include="Migrations\201703011507222_AddForeignKeyPropertiesTogig.Designer.cs">
+      <DependentUpon>201703011507222_AddForeignKeyPropertiesTogig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -314,6 +318,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702281605405_PopulateGenresTable.resx">
       <DependentUpon>201702281605405_PopulateGenresTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703011507222_AddForeignKeyPropertiesTogig.resx">
+      <DependentUpon>201703011507222_AddForeignKeyPropertiesTogig.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
