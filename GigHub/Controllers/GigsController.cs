@@ -29,20 +29,26 @@ namespace WebApplication1.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
-        [HttpPost]
+        [Authorize] // requires user to be logged in for this method to be called
+        [HttpPost] // can only be called in a form submit action
         public ActionResult Create(GigFormViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Genres = Context.Genres.ToList();
+                return View("Create", viewModel); // will return current model back to same view, which will keep fields populated and validation messages displayed
+            }
+
             Gig gig = new Gig
             {
                 ArtistId = User.Identity.GetUserId(),
-                DateAdded = viewModel.DateAdded,
+                DateAdded = viewModel.GetDateAdded(),
                 GenreId = viewModel.Genre,
                 Venue = viewModel.Venue
             };
 
             Context.Gigs.Add(gig);
-            Context.SaveChanges();
+            Context.SaveChanges(); // writes to the database
 
             return RedirectToAction("Index", "Home");
         }
