@@ -31,6 +31,7 @@ namespace WebApplication1.Controllers
 
         [Authorize] // requires user to be logged in for this method to be called
         [HttpPost] // can only be called in a form submit action
+        [ValidateAntiForgeryToken] // used to prevent CSRF attacks. Used in conjuction with @Html.AntiForgeryToken() on view, this validates this token existed on the form that submitted this request.
         public ActionResult Create(GigFormViewModel viewModel)
         {
             if (!ModelState.IsValid)
