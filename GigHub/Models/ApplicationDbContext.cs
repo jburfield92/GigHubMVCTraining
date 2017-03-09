@@ -27,10 +27,15 @@ namespace GigHub.Models
                 .WithMany() // each gig can have many attendances
                 .WillCascadeOnDelete(false); // turns off cascade delete with the gig to the attendances
 
-            modelBuilder.Entity<Following>()
-                .HasRequired(a => a.Artist) // makes it so each following have a required artist (the followed)
-                .WithMany() // each artist can have many followers
-                .WillCascadeOnDelete(false); // turns off cascade delete with the artist to the followers
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Followers) // makes it so each user can have many followers
+                .WithRequired(f => f.Followee) // each follower must have a followee
+                .WillCascadeOnDelete(false); // turns off cascade delete with the followee to the followers
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Followees) // makes it so each user can follow many followees
+                .WithRequired(f => f.Follower) // each followee has a required follower
+                .WillCascadeOnDelete(false); // turns off cascade delete with the followere to the followee
 
             base.OnModelCreating(modelBuilder);
         }

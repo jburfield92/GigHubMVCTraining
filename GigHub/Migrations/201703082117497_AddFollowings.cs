@@ -11,23 +11,23 @@ namespace GigHub.Migrations
                 "dbo.Followings",
                 c => new
                     {
-                        ArtistId = c.String(nullable: false, maxLength: 128),
+                        FolloweeId = c.String(nullable: false, maxLength: 128),
                         FollowerId = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.ArtistId, t.FollowerId })
-                .ForeignKey("dbo.AspNetUsers", t => t.ArtistId)
-                .ForeignKey("dbo.AspNetUsers", t => t.FollowerId, cascadeDelete: true)
-                .Index(t => t.ArtistId)
+                .PrimaryKey(t => new { t.FolloweeId, t.FollowerId })
+                .ForeignKey("dbo.AspNetUsers", t => t.FollowerId)
+                .ForeignKey("dbo.AspNetUsers", t => t.FolloweeId)
+                .Index(t => t.FolloweeId)
                 .Index(t => t.FollowerId);
             
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Followings", "FolloweeId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Followings", "FollowerId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Followings", "ArtistId", "dbo.AspNetUsers");
             DropIndex("dbo.Followings", new[] { "FollowerId" });
-            DropIndex("dbo.Followings", new[] { "ArtistId" });
+            DropIndex("dbo.Followings", new[] { "FolloweeId" });
             DropTable("dbo.Followings");
         }
     }
