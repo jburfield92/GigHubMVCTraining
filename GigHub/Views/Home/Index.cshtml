@@ -4,9 +4,66 @@
     ViewBag.Title = "Home Page";
 }
 
-<ul>
+@* Future addition, marking the events as "Going" on load and clicking button again makes them no longer attend*@
+@* Future addition, marking the artists as "Following" on load and clicking button again makes them no longer follow*@
+
+<ul class="gigs">
     @foreach (GigHub.Models.Gig gig in Model)
     {
-        <li>@gig.DateAdded - @gig.Artist.Name</li>
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.DateAdded.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.DateAdded.ToString("d ")
+                </div>
+            </div>
+            <div class="details">
+                <span class="artist">
+                    @gig.Artist.Name <button data-artist-id="@gig.ArtistId" class="btn btn-link btn-sm pull-right js-toggle-follow">Follow</button>
+                </span>
+                <span class="genre">
+                    @gig.Genre.Name
+                </span>
+                <button data-gig-id="@gig.Id" class="btn btn-default btn-sm pull-right js-toggle-attendance">Going?</button>
+            </div>
+        </li>
     }
 </ul>
+
+@section scripts
+{
+    <script>
+        // future fix, the change to Going and change of the class is done, even if the user isn't logged in, nothing happens, nothing is saved, but markup behavior occurs, but resets on reload.
+        // should prevent user from clicking if they're not clicked in, or message saying they're not logged in to attend, or redirect to login page on button click should happen.
+        $(document).ready(function () {
+            $(".js-toggle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
+                    .done(function () {
+                        button.removeClass("btn-default").add("btn-info").text("Going");
+                    })
+                    .fail(function () {
+                        // future todo: this could be a 'toast' notification
+                        alert("Something failed!");
+                    });
+            });
+        });
+
+        // future fix would be to make it so any Gigs shown with the same artist and follow, should switch Follow to Following when you follow once instance of the same artist
+        $(document).ready(function () {
+            $(".js-toggle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/following", { artistId: button.attr("data-artist-id") })
+                    .done(function () {
+                        button.text("Following");
+                    })
+                    .fail(function () {
+                        // future todo: this could be a 'toast' notification
+                        alert("Something failed!");
+                    });
+            });
+        });
+    </script>
+}
