@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace WebApplication1.Controllers
@@ -17,6 +16,15 @@ namespace WebApplication1.Controllers
         public GigsController()
         {
             Context = new ApplicationDbContext();
+        }
+
+        [Authorize]
+        public ActionResult Mine()
+        {
+            string userId = User.Identity.GetUserId();
+            List<Gig> gigs = Context.Gigs.Where(g => g.ArtistId == userId && g.DateAdded > DateTime.Now).Include(g => g.Genre).ToList();
+
+            return View(gigs);
         }
 
         [Authorize]
@@ -71,7 +79,7 @@ namespace WebApplication1.Controllers
             Context.Gigs.Add(gig);
             Context.SaveChanges(); // writes to the database
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Mine", "Gigs");
         }
     }
 }
