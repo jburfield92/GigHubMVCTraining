@@ -236,3 +236,7 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# SQL Server files
+*.mdf
+*.ldf
