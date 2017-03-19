@@ -22,7 +22,8 @@ namespace GigHub.Controllers
             List<Gig> upcomingGigs = Context.Gigs
                 .Include(gig => gig.Artist)
                 .Include(gig => gig.Genre)
-                .Where(gig => gig.DateAdded > DateTime.Now).ToList();
+                .Where(gig => gig.DateAdded > DateTime.Now && !gig.IsCanceled)
+                .ToList();
 
             GigsViewModel viewModel = new GigsViewModel
             {

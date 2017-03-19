@@ -7,7 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace WebApplication1.Controllers
+namespace GigHub.Controllers
 {
     public class GigsController : Controller
     {
@@ -22,7 +22,10 @@ namespace WebApplication1.Controllers
         public ActionResult Mine()
         {
             string userId = User.Identity.GetUserId();
-            List<Gig> gigs = Context.Gigs.Where(g => g.ArtistId == userId && g.DateAdded > DateTime.Now).Include(g => g.Genre).ToList();
+            List<Gig> gigs = Context.Gigs
+                .Where(g => g.ArtistId == userId && g.DateAdded > DateTime.Now && !g.IsCanceled)
+                .Include(g => g.Genre)
+                .ToList();
 
             return View(gigs);
         }
@@ -31,10 +34,12 @@ namespace WebApplication1.Controllers
         public ActionResult Attending()
         {
             string userId = User.Identity.GetUserId();
-            List<Gig> gigs = Context.Attendances.Where(a => a.AttendeeId == userId)
+            List<Gig> gigs = Context.Attendances
+                .Where(a => a.AttendeeId == userId)
                 .Select(a => a.Gig)
                 .Include(g => g.Artist)
-                .Include(g => g.Genre).ToList();
+                .Include(g => g.Genre)
+                .ToList();
 
             GigsViewModel viewModel = new GigsViewModel()
             {
