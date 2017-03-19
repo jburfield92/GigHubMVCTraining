@@ -51,10 +51,33 @@ namespace WebApplication1.Controllers
         {
             GigFormViewModel viewModel = new GigFormViewModel
             {
-                Genres = Context.Genres.ToList()
+                Genres = Context.Genres.ToList(),
+                Heading = "Add a Gig"
             };
 
-            return View(viewModel);
+            return View("GigForm", viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            // future: should not show buttons or give error if not user allowed to edit/delete
+            string userId = User.Identity.GetUserId();
+
+            Gig gig = Context.Gigs.Single(g => g.Id == id && g.ArtistId == userId);
+
+            GigFormViewModel viewModel = new GigFormViewModel
+            {
+                Id = gig.Id,
+                Heading = "Edit a Gig",
+                Genres = Context.Genres.ToList(),
+                Date = gig.DateAdded.ToString("MM/dd/yyyy"),
+                Time = gig.DateAdded.ToString("HH:mm"),
+                Genre = gig.GenreId,
+                Venue = gig.Venue
+            };
+
+            return View("GigForm", viewModel);
         }
 
         [Authorize] // requires user to be logged in for this method to be called
@@ -65,7 +88,7 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
             {
                 viewModel.Genres = Context.Genres.ToList();
-                return View("Create", viewModel); // will return current model back to same view, which will keep fields populated and validation messages displayed
+                return View("GigForm", viewModel); // will return current model back to same view, which will keep fields populated and validation messages displayed
             }
 
             Gig gig = new Gig
@@ -78,6 +101,29 @@ namespace WebApplication1.Controllers
 
             Context.Gigs.Add(gig);
             Context.SaveChanges(); // writes to the database
+
+            return RedirectToAction("Mine", "Gigs");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(GigFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Genres = Context.Genres.ToList();
+                return View("GigForm", viewModel);
+            }
+
+            string userId = User.Identity.GetUserId();
+
+            Gig gig = Context.Gigs.Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
+            gig.Venue = viewModel.Venue;
+            gig.DateAdded = viewModel.GetDateAdded();
+            gig.GenreId = viewModel.Genre;
+
+            Context.SaveChanges();
 
             return RedirectToAction("Mine", "Gigs");
         }
