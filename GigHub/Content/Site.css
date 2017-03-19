@@ -42,6 +42,11 @@ span.field-validation-error {
     -webkit-box-shadow: none;
 }
 
+.searchBox {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
 .navbar-inverse {
     background-color: #ff4342;
     border-color: #ff4342;
@@ -196,4 +201,8 @@ h6,
 }
 .popover-notifications ul.notifications .highlight {
     font-weight: bold;
+}
+
+#searchGigs {
+    width: 300px;
 }
