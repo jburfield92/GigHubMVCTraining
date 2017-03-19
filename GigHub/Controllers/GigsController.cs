@@ -104,6 +104,8 @@ namespace GigHub.Controllers
                 Venue = viewModel.Venue
             };
 
+            gig.Create();
+
             Context.Gigs.Add(gig);
             Context.SaveChanges(); // writes to the database
 

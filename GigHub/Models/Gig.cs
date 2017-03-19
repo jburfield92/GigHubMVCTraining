@@ -35,6 +35,16 @@ namespace GigHub.Models
             Attendances = new Collection<Attendance>();
         }
 
+        public void Create()
+        {
+            Notification notification = Notification.GigCreated(this);
+
+            foreach (ApplicationUser followee in Artist.Followers.Select(f => f.Followee))
+            {
+                followee.Notify(notification);
+            }
+        }
+
         public void Cancel()
         {
             IsCanceled = true;
